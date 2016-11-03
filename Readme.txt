@@ -13,6 +13,8 @@ SimpleGUICS2Pygame
 What does the if __name__ == "__main__": do?
 >>> http://stackoverflow.com/questions/419163/what-does-if-name-main-do
 
+排序 .sort() , sorted()
+>>> http://swaywang.blogspot.tw/2012/05/pythonpythonpython-sorting.html
 
 [程式思路]
 觀察之後得知
@@ -21,4 +23,5 @@ What does the if __name__ == "__main__": do?
 外心彼此相連就可以形成一個Convex hull , 
 
 [數學]
-求終點  (x, y) = ((x1 + x2)/2 , (y1 + y2)/2)
+求中點  (x, y) = ((x1 + x2)/2 , (y1 + y2)/2)
+兩線垂直 斜率 m1 * m2 = -1

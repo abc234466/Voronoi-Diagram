@@ -9,11 +9,12 @@
 # [            Voronoi Diagram             ]
 from _io import open
 from ctypes.wintypes import BOOLEAN
+from fractions import *  # process Fraction
 import math
 import random
 from SimpleGUICS2Pygame.simpleguics2pygame import Canvas
-from sympy import * # procress polynomial
-from fractions import * #process Fraction
+from sympy import *  # procress polynomial
+
 
 try:
     import simplegui
@@ -132,7 +133,9 @@ def write_file():
 # clear the window
 def clear_window():
         global point_list
+        global line_list
         point_list = []
+        line_list = []
         frame.set_canvas_background("White") 
    
 # helper function
@@ -142,11 +145,9 @@ def distance(p, q):
 # define event handler for mouse click, draw
 def click(pos):
         point_list.append(list(pos))
-        #print(pos)
+        # print(pos)
         global i
         i += 1
-        
-        
     
 #    if distance(point, pos) < ball_radius:
 #        if ball_color == "Red":
@@ -159,10 +160,10 @@ def click(pos):
 def draw(canvas):
         global i
         i %= len(color_list)
-        for _ in point_list:
-            canvas.draw_circle(_, ball_radius, 2, "Black", ball_color)
-        #for _ in point_list:    
-            #canvas.draw_line([0,0],[600,600],2,"Black")
+        for point in point_list:
+            canvas.draw_circle(point, ball_radius, 2, "Black", ball_color)
+        for line in line_list:    
+            canvas.draw_line(line[0], line[1], 2, "Olive")
 #             frame.set_canvas_background(color_list[i])
 #         canvas.draw_line([0,0], [height,width], 2, color_list[i])
 
@@ -170,24 +171,80 @@ def draw(canvas):
 def step_by_step(canvas):
    pass
 
-def circumcenter(point_ls):
-    if(len(point_ls)==2):
-        slope = round((point_ls[1][1]-point_ls[0][1])/(point_ls[1][0]-point_ls[0][0]),1) #兩點斜率
-        bisetor= 1/slope #
-        mid = [(point_ls[1][0]+point_ls[0][0])/2, (point_ls[1][1]+point_ls[0][1])/2] #中點
-        print(slope)
-        print(bisetor)
-        print(mid)
+
+def list2int(numlist):
+    return int(numlist[0])
+
+def del_dup_point():
+    global point_list
+    del_point_list=[]
+    [del_point_list.append(i) for i in point_list  if not i in del_point_list]
+    point =  del_point_list
+    return del_point_list
+
+# 修正 將 Fraction 轉型為 str 時會分母為1的情形 
+def fix_slope(sr):
+    if (len(sr)==1 or len(sr)==2):
+        return sr+"/1"
+     
+def circumcenter():
+    global point_list
+    #先判斷是否有重複節點
+    point_list = del_dup_point()
+    point_ls = point_list
+    
+    #只有一點
+    if(len(point_ls) == 1):
+        print("Only one point")
+        pass
+    if(len(point_ls) == 2):
+        #兩點平行，垂直線
+        if((point_ls[1][1] - point_ls[0][1]) == 0):
+            mid = [(point_ls[1][0] + point_ls[0][0]) / 2, (point_ls[1][1] + point_ls[0][1]) / 2]  # 中點
+            line_list.append([[mid[0], 0], [mid[0], 600]])
+        #兩點垂直，水平線
+        elif((point_ls[1][0] - point_ls[0][0]) == 0):
+            mid = [(point_ls[1][0] + point_ls[0][0]) / 2, (point_ls[1][1] + point_ls[0][1]) / 2]  # 中點
+            line_list.append([[0, mid[1]], [600, mid[1]]])
+        #任意兩點
+        else:    
+            slope = str(-1 / Fraction((point_ls[1][0] - point_ls[0][0]), (point_ls[1][1] - point_ls[0][1])))  # 中垂線斜率
+            mid = [(point_ls[1][0] + point_ls[0][0]) / 2, (point_ls[1][1] + point_ls[0][1]) / 2]  # 中點
+            
+            up=mid
+            down=mid
+            #修正  
+            fix_slope(slope)
+            # 中垂線方程式
+            x_y = slope.split('/')
+            x1 = int(x_y[0])
+            y1 = int(x_y[1])
+            while(up[0]>=0 and up[1]>=0 and up[0]<=600 and up[1]<=600):
+                up = [up[0]-x1/2,up[1]-y1/2]
+            while(down[0]>=0 and down[1]>=0 and down[0]<=600 and down[1]<=600):
+                down = [down[0]+x1/2,down[1]+y1/2]
+#             equ = int(x1) * mid[0] - int(y1) * mid[1]
+#             f1 = int(x1) * x + equ
+#             f2 = -int(y1) * y + equ
+#             cor_x = list2int(solve(f1, x))
+#             cor_y = list2int(solve(f2, y))
+            print(up, down)
+            line_list.append([up, down])
+#             print(cor_x, cor_y)
+#             print(mid[0], mid[1])
+#             print(equ)
         
-    if(len(point_ls)==3):
-        print(3)    
+    if(len(point_ls) == 3):
+        #兩點中垂線斜率
+        slope1 = str(-1 / Fraction((point_ls[1][0] - point_ls[0][0]), (point_ls[1][1] - point_ls[0][1])))  
+        slope2 = str(-1 / Fraction((point_ls[2][0] - point_ls[0][0]), (point_ls[2][1] - point_ls[0][1])))  
+        slope2 = str(-1 / Fraction((point_ls[2][0] - point_ls[1][0]), (point_ls[2][1] - point_ls[1][1])))  
 # Divide and Conquer
-def divide_and_conquer(point):
-    print(point)
+def divide_and_conquer():
+    pass
 # Start the Voronoi Diagram
 def run():
-    divide_and_conquer(point_list)
-    circumcenter(point_list)
+    circumcenter()
     
 # create frame
 frame = simplegui.create_frame("Voronoi Diagram", width, height)
