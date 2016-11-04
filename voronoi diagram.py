@@ -7,6 +7,20 @@
 #------------------------------------------
 """
 # [            Voronoi Diagram             ]
+from _io import open
+from ctypes.wintypes import BOOLEAN
+from fractions import *  # process Fraction
+import math
+import random
+
+from SimpleGUICS2Pygame.simpleguics2pygame import Canvas
+from numpy import cross
+from sympy import *  # process polynomial
+
+import os
+import numpy as np  # process vector
+from tkinter import filedialog
+
 
 try:
     import simplegui
@@ -17,15 +31,6 @@ except ImportError:
 
     SIMPLEGUICS2PYGAME = True
 
-from _io import open
-from ctypes.wintypes import BOOLEAN
-from fractions import *  # process Fraction
-import math
-import random
-
-from SimpleGUICS2Pygame.simpleguics2pygame import Canvas
-from sympy import *  # process polynomial
-import numpy as np    # process vector
 
 
     
@@ -50,21 +55,21 @@ ball_color = "BLACK"
 start_control = False
 i = 0
 
+#
+
 x = Symbol('x')
 y = Symbol('y')
 z = Symbol('z')
 
 # read file with comment
 def read_file_comment():
-        file = open("test.txt", 'r')
+        #file = open("test1.txt", 'r')
+        file = filedialog.askopenfile()
         Flag = False;
         global point_list
         global i
-        while True:
+        while (file !=None):
             f_str = file.readline()
-            # file.readline()
-            # print(f_str)
-        
             f_list = list(f_str)
             print(f_str)
         
@@ -95,11 +100,12 @@ def read_file_comment():
 
 # read file without comment
 def read_file():
-        file = open("test2.txt", 'r')
+        #file = open("test2.txt", 'r')
+        file = filedialog.askopenfile(initialdir = "/",title = "Select file")
         Flag = False;
         global point_list
         global i
-        while True:
+        while (file !=None):
             f_str = file.readline()
         # file.readline()
         # print(f_str)
@@ -218,6 +224,15 @@ def fix_slope(sr):
     if (len(sr) == 1 or len(sr) == 2):
         return sr + "/1"
     return sr
+
+# 兩向量交點
+def intersection(a1, a2, b1, b2):
+    a = a2 - a1
+    b = b2 - b1
+    s = b1 - a1
+    
+    return a1 + a * cross(s, b) / cross(a, b)
+
      
 def circumcenter(point_ls):
     
@@ -227,19 +242,18 @@ def circumcenter(point_ls):
         pass
     # 兩點
     if(len(point_ls) == 2):
-        #定義兩點
+        # 定義兩點
         a = np.array(point_ls[0])
         b = np.array(point_ls[1])
         
-        #求得兩點向量
-        vector = [a-b]
+        # 求得兩點向量
+        vector = a - b
         
-        #法向量
-        nor_vector = [vector[1],-vector[0]]
+        # 法向量
+        nor_vector = np.array([vector[1], -vector[0]])
         
-        #兩點中點
+        # 兩點中點
         mid = [(point_ls[1][0] + point_ls[0][0]) / 2, (point_ls[1][1] + point_ls[0][1]) / 2]
-        
         
         # 兩點平行，垂直線
         if(nor_vector[0] == 0):
@@ -248,45 +262,43 @@ def circumcenter(point_ls):
         elif(nor_vector[1] == 0):
             line_list.append([[0, mid[1]], [600, mid[1]]])
         # 任意兩點
-#         else:    
-#             slope = str(-1 / Fraction((point_ls[1][0] - point_ls[0][0]), (point_ls[1][1] - point_ls[0][1])))  # 中垂線斜率
-#             
-#             # 畫線兩點
-#             up = mid
-#             down = mid
-#             
-#             # 修正  
-#             slope = fix_slope(slope)
-#             
-#             # 中垂線方程式
-#             x_y = slope.split('/')
-#             x1 = int(x_y[0])
-#             y1 = int(x_y[1])
-#             while(up[0] >= 0 and up[1] >= 0 and up[0] <= 600 and up[1] <= 600):
-#                 up = [up[0] - x1 / 2, up[1] - y1 / 2]
-#             while(down[0] >= 0 and down[1] >= 0 and down[0] <= 600 and down[1] <= 600):
-#                 down = [down[0] + x1 / 2, down[1] + y1 / 2]
-# #             equ = int(x1) * mid[0] - int(y1) * mid[1]
-# #             f1 = int(x1) * x + equ
-# #             f2 = -int(y1) * y + equ
-# #             cor_x = list2int(solve(f1, x))
-# #             cor_y = list2int(solve(f2, y))
-#             print(up, down)
-#             line_list.append([up, down])
-#             print(point_ls)
-# #             print(cor_x, cor_y)
-# #             print(mid[0], mid[1])
-# #             print(equ)
-#         
-#     if(len(point_ls) == 3):
-#         #三點平行共線
-#         if((point_ls[1][1] - point_ls[0][1]) == 0 and (point_ls[2][1] - point_ls[1][1]) == 0):
-#             circumcenter([point_ls[1],point_ls[0]])
-#             circumcenter([point_ls[2],point_ls[1]])
-#         #三點垂直共線，
-#         elif((point_ls[1][0] - point_ls[0][0]) == 0 and (point_ls[2][0] - point_ls[1][0]) == 0):
-#             circumcenter([point_ls[1],point_ls[0]])
-#             circumcenter([point_ls[2],point_ls[1]])
+        else:    
+            # 畫線兩點
+            up = mid
+            down = mid
+            while(up[0]>=0 and up[1]>=0 and up[0]<=600 and up[1]<=600):
+                up = [up[0]-nor_vector[0],up[1]-nor_vector[1]]
+            while(down[0]>=0 and down[1]>=0 and down[0]<=600 and down[1]<=600):
+                down = [down[0]+nor_vector[0],down[1]+nor_vector[1]]
+            
+            print(up, down)
+            line_list.append([up,down])
+            # 中垂線方程式
+         
+    if(len(point_ls) == 3):
+        # 定義兩點
+        a = np.array(point_ls[0])
+        b = np.array(point_ls[1])
+        c = np.array(point_ls[2])
+        
+        # 求得兩點向量
+        vector1 = a - b
+        vector2 = b - c
+        
+        # 法向量
+        nor_vector1 = np.array([vector1[1], -vector1[0]])
+        nor_vector2 = np.array([vector2[1], -vector2[0]])
+        
+        # 兩點中點
+        mid1 = [(point_ls[1][0] + point_ls[0][0]) / 2, (point_ls[1][1] + point_ls[0][1]) / 2]
+        mid2 = [(point_ls[1][0] + point_ls[2][0]) / 2, (point_ls[1][1] + point_ls[2][1]) / 2]
+        mid3 = [(point_ls[2][0] + point_ls[0][0]) / 2, (point_ls[2][1] + point_ls[0][1]) / 2]
+        print(vector1 , vector2)
+        #三點平行共線
+        if( np.array_equal(vector1, vector2)):
+            circumcenter([point_ls[1],point_ls[0]])
+            circumcenter([point_ls[2],point_ls[1]])
+         
 #         #例外 : 三點共線(m !=0 & ∞) , 三點不共線
 #         else:
 #             slope1 = str(-1 / Fraction((point_ls[1][0] - point_ls[0][0]), (point_ls[1][1] - point_ls[0][1])))  
@@ -333,9 +345,9 @@ def divide_and_conquer():
 # Start the Voronoi Diagram
 def run():
     global point_list
-#     point_list.append([0,0])
-    point_list.append([300, 200])
-    point_list.append([400, 200])
+#     point_list.append([200,100])
+#     point_list.append([200, 200])
+#     point_list.append([200, 300])
     point_list = del_dup_point()
     point_list.sort()
     circumcenter(point_list)
