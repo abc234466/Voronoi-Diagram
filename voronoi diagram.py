@@ -52,14 +52,15 @@ i = 0
 def read_file_comment():
     clear_window()
     # file = open("test1.txt", 'r')
-    file = filedialog.askopenfile()
+    file = filedialog.askopenfile(initialdir="/", mode='r', title="Select file")
     Flag = False;
     global point_list
     global i
     while (file != None):
         f_str = file.readline()
+        
         f_list = list(f_str)
-        print(f_str)
+        print(f_str, end="")
         
         if(f_str == "0\n"):
 #       print(f_str)
@@ -105,14 +106,15 @@ def read_file():
         f_str = file.readline()
         # file.readline()
         # print(f_str)
-    
+
         f_list = list(f_str)
+        print(f_list)
 #             print(f_str)
-        if(f_str == "0" or f_list==[]):
+        if(f_list[0] == "0" or f_list == []):
 #             print(f_str)
             file.close
             break
-        elif (f_str == '\n' ):
+        elif (f_str == '\n'):
             continue
         elif(f_list[0] == 'P'):
             # 拿掉P
@@ -125,7 +127,7 @@ def read_file():
             print(point_list)
             e = f_str[2:]
             sp_edge = e.split(" ")
-            line_list.append([[int(sp_edge[0]), int(sp_edge[1])],[int(sp_edge[2]), int(sp_edge[3])]])
+            line_list.append([[int(sp_edge[0]), int(sp_edge[1])], [int(sp_edge[2]), int(sp_edge[3])]])
             print(line_list)
         elif(f_list[0] != '#'):
         # print(f_str,end='')
@@ -155,13 +157,13 @@ def write_file():
     file = filedialog.asksaveasfile(initialdir="/", mode='w', title="Store file", defaultextension=".txt")
     if file is None:
         return
-    #寫入點
+    # 寫入點
     for i in sort_point:
         print (type(i))
         str1 = str(i[0])
         str2 = str(i[1])
         file.write("P " + str1 + " " + str2 + "\n")
-    #寫入線段
+    # 寫入線段
     for i in sort_line:
         print (type(i))
         p1 = str(i[0][0])
@@ -171,7 +173,7 @@ def write_file():
         file.write("E " + p1 + " " + p2 + " " + p3 + " " + p4 + "\n")
     file.close()
 
-#讀取下一筆資料
+# 讀取下一筆資料
 def next_file():
     global ind
     global point_list
@@ -179,6 +181,7 @@ def next_file():
     global point_end
     global point_num
     global line_list
+    global endtest_lable
     if(point_end < len(store_list) and len(store_list) != 0):
         point_list = []
         line_list = []
@@ -187,7 +190,8 @@ def next_file():
             point_list.append(store_list[i])
         point_begin += point_num[ind]
         ind += 1
-    else:
+    elif(point_end>0 and point_begin>0):
+        endtest_lable.set_text("Just one is final test")
         pass    
     
 # clear the window
@@ -196,6 +200,7 @@ def clear_window():
     global line_list
     point_list = []
     line_list = []
+    endtest_lable.set_text("")
     frame.set_canvas_background("White") 
    
 # helper function
@@ -256,15 +261,19 @@ def intersection(a1, a2, b1, b2):
 
      
 def point_line(point_ls):
-    #只有一點(終止條件)
+    # 只有一點(終止條件)
     if(len(point_ls) == 1):
         print("---Only one point---")
     # 兩點(終止條件)     
     if(len(point_ls) == 2):
         print("---Two points---")
+        
+         # 處理當時進來的點
+        point_l = point_ls 
+        
         # 定義兩點
-        a = np.array(point_ls[0])
-        b = np.array(point_ls[1])
+        a = np.array(point_l[0])
+        b = np.array(point_l[1])
         
         # 求得兩點向量
         vector = a - b
@@ -273,7 +282,7 @@ def point_line(point_ls):
         nor_vector = np.array([vector[1], -vector[0]])
         
         # 兩點中點
-        mid = [(point_ls[1][0] + point_ls[0][0]) / 2, (point_ls[1][1] + point_ls[0][1]) / 2]
+        mid = [(point_l[1][0] + point_l[0][0]) / 2, (point_l[1][1] + point_l[0][1]) / 2]
         
         # 兩點平行，垂直線
         if(nor_vector[0] == 0):
@@ -287,15 +296,15 @@ def point_line(point_ls):
             up = mid
             down = mid
             while(up[0] >= 0 and up[1] >= 0 and up[0] <= 600 and up[1] <= 600):
-                up = [up[0] - nor_vector[0], up[1] - nor_vector[1]]
+                up = [up[0] - nor_vector[0] / 500, up[1] - nor_vector[1] / 500]
             while(down[0] >= 0 and down[1] >= 0 and down[0] <= 600 and down[1] <= 600):
-                down = [down[0] + nor_vector[0], down[1] + nor_vector[1]]
+                down = [down[0] + nor_vector[0] / 500, down[1] + nor_vector[1] / 500]
             
             print(up, down)
-            line_list.append([up, down])
+            line_list.append([[int(up[0]), int(up[1])], [int(down[0]), int(down[1])]])
         print(line_list)
             # 中垂線方程式
-    #三點(終止條件)     
+    # 三點(終止條件)     
     if(len(point_ls) == 3):
         print("---Three points---")
         # 定義兩點
@@ -320,16 +329,23 @@ def point_line(point_ls):
         mid3 = [(point_ls[2][0] + point_ls[0][0]) / 2, (point_ls[2][1] + point_ls[0][1]) / 2]
         print(vector1 , vector2, vector3)
         
+        # 求外心
+        cir_point = circumcentre(mid1, mid2, nor_vector1, nor_vector2)
+        cir_point2int = [cir_point[0], cir_point[1]]
+        print("外心 : " , cir_point)
+        
         # 三點平行共線(例外狀況 : 要先進行化簡)
         if(np.array_equal(vector1, vector2) or (vector1[0] / vector1[1] == vector2[0] / vector2[1])):
             point_line([point_ls[1], point_ls[0]])
             point_line([point_ls[2], point_ls[1]])
-         
+            
+        # 外心跑出邊框外
+        elif(cir_point[0] < 0 or cir_point[1] < 0 or cir_point[1] > 600 or cir_point[0] > 600):
+            point_line([point_ls[0], point_ls[2]])
+            point_line([point_ls[1], point_ls[2]])
+            
         # 例外 : 三點不共線
         else:
-            # 求外心
-            cir_point = circumcentre(mid1, mid2, nor_vector1, nor_vector2)
-            cir_point2int = [cir_point[0], cir_point[1]]
             
             # point_list.append([round(cir_point[0],0), round(cir_point[1],0)]) 我只是拿來檢查外心的位置是否正確拉~
             
@@ -381,7 +397,7 @@ def point_line(point_ls):
             line2 = cir_point2int
             line3 = cir_point2int
             
-            #三向量找與邊框的交點
+            # 三向量找與邊框的交點
             # > 0 -> 鈍角
             if(ang_va1 > 0 or ang_va2 > 0):
                 while(line1[0] >= 0 and line1[1] >= 0 and line1[0] <= 600 and line1[1] <= 600):
@@ -457,7 +473,7 @@ def run():
     # sort the point
     point_list.sort()
     
-    #process the relations between points and lines
+    # process the relations between points and lines
     point_line(point_list)
     
 # create frame
@@ -479,8 +495,9 @@ btm_fr_c = frame.add_button("Next", next_file, 200);
 lable4 = frame.add_label("\n", 1);
 btm_fr_wf = frame.add_button("Write File", write_file, 200);
 lable3 = frame.add_label("\n", 1);
-
 btm_clear = frame.add_button("Clear window", clear_window, 200);
+lable3 = frame.add_label("\n", 1);
+endtest_lable = frame.add_label("", 200)
 
 # start frame
 frame.set_mouseclick_handler(click)
