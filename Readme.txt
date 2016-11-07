@@ -37,7 +37,15 @@ Python - 向量處理
 >>>http://ccckmit.wikidot.com/la:vector
 
 演算法筆記 - 利用向量求交點
-http://www.csie.ntnu.edu.tw/~u91029/Point.html
+>>>http://www.csie.ntnu.edu.tw/~u91029/Point.html
+證明>>>http://paulbourke.net/geometry/pointlineplane/
 
 Voronoi Diagram
 >>>http://students.info.uaic.ro/~emilian.necula/vor2.pdf
+
+Python tk fileDialog 寫檔案
+>>>http://stackoverflow.com/questions/19476232/save-file-dialog-in-tkinter
+
+中文的 windows「命令提示字元」(cmd) 編碼預設是：cp950 ，而 Python3 的預設程式碼編碼是：utf-8 (cp65001)
+>>>https://read01.com/Rg255.html
+>>>http://marsray.pixnet.net/blog/post/61040521-%5Bpython3%5D-%E7%94%A8-python3-%E5%AF%AB%E4%B8%80%E5%80%8B%E7%B6%B2%E8%B7%AF%E7%88%AC%E8%9F%B2
