@@ -1,4 +1,4 @@
-"""
+﻿"""
 #------------------------------------------
 # $LAN=Python$
 # Author : 陳柏憲  Bo-Xian Chen
@@ -252,18 +252,18 @@ def del_dup_point():
 #         return sr + "/1"
 #     return sr
 
-# 兩向量交點
+# 求得兩向量交點
 def intersection(a1, a2, b1, b2):
     a = a2 - a1
     b = b2 - b1
     s = b1 - a1
     return a1 + a * cross(s, b) / cross(a, b)
 
-     
 def point_line(point_ls):
     # 只有一點(終止條件)
     if(len(point_ls) == 1):
         print("---Only one point---")
+        
     # 兩點(終止條件)     
     if(len(point_ls) == 2):
         print("---Two points---")
@@ -304,6 +304,7 @@ def point_line(point_ls):
             line_list.append([[int(up[0]), int(up[1])], [int(down[0]), int(down[1])]])
         print(line_list)
             # 中垂線方程式
+            
     # 三點(終止條件)     
     if(len(point_ls) == 3):
         print("---Three points---")
@@ -332,7 +333,7 @@ def point_line(point_ls):
         # 求外心
         cir_point = circumcentre(mid1, mid2, nor_vector1, nor_vector2)
         cir_point2int = [cir_point[0], cir_point[1]]
-        print("外心 : " , cir_point)
+        print("外心 : " , cir_point2int)
         
         # 三點平行共線(例外狀況 : 要先進行化簡)
         if(np.array_equal(vector1, vector2) or (vector1[0] / vector1[1] == vector2[0] / vector2[1])):
@@ -467,10 +468,11 @@ def run():
 #     point_list.append([200, 300])
 #     point_list.append([300, 200])
 #     point_list.append([300, 300])
-    # del the duplicate point
+
+    # del the duplicate point in the beginning
     point_list = del_dup_point()
     
-    # sort the point
+    # sort the point before run
     point_list.sort()
     
     # process the relations between points and lines
