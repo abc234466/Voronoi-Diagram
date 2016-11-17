@@ -190,7 +190,7 @@ def next_file():
             point_list.append(store_list[i])
         point_begin += point_num[ind]
         ind += 1
-    elif(point_end>0 and point_begin>0):
+    elif(point_end > 0 and point_begin > 0):
         endtest_lable.set_text("Just one is final test")
         pass    
     
@@ -252,6 +252,26 @@ def del_dup_point():
 #         return sr + "/1"
 #     return sr
 
+# 求內心 formula: A(x1，y1)，B(x2，y2)，C(x3，y3)，BC=a，AC=b，AB=c, then heart_point=( (ax1+bx2+cx3)/(a+b+c)，(ay1+by2+cy3)/(a+b+c) ) 
+def heart(pa, pb, pc):
+    global point_list
+    dis_a = distance(pb, pc)
+    dis_b = distance(pa, pc)
+    dis_c = distance(pa, pb)
+    
+    # sum of triangal edge distance
+    dis_sum = dis_a + dis_b + dis_c
+    
+    # 內心 點位置
+    heart_point = [int((pa[0] * dis_a + pb[0] * dis_b + pc[0] * dis_c) / dis_sum), int((pa[1] * dis_a + pb[1] * dis_b + pc[1] * dis_c) / dis_sum)]
+    
+    # 檢查內心位址
+    # point_list.append(heart_point)
+    print("內心", heart_point)
+    
+    return heart_point 
+     
+
 # 求得兩向量交點
 def intersection(a1, a2, b1, b2):
     a = a2 - a1
@@ -268,7 +288,7 @@ def point_line(point_ls):
     if(len(point_ls) == 2):
         print("---Two points---")
         
-         # 處理當時進來的點
+        # 處理當時進來的點
         point_l = point_ls 
         
         # 定義兩點
@@ -308,150 +328,164 @@ def point_line(point_ls):
     # 三點(終止條件)     
     if(len(point_ls) == 3):
         print("---Three points---")
-        # 定義兩點
+        
+        # 初始化 點的位置
         a = np.array(point_ls[0])
         b = np.array(point_ls[1])
         c = np.array(point_ls[2])
         
-        # 求得兩點向量
-        vector1 = b - a
-        vector2 = c - b
-        vector3 = a - c
-        
-        # 求法向量
-        nor_vector1 = np.array([vector1[1], -vector1[0]])
-        nor_vector2 = np.array([vector2[1], -vector2[0]])
-        nor_vector3 = np.array([vector3[1], -vector3[0]])
-        print(nor_vector1, nor_vector2, nor_vector3)
-        
-        # 兩點中點
-        mid1 = [(point_ls[1][0] + point_ls[0][0]) / 2, (point_ls[1][1] + point_ls[0][1]) / 2]
-        mid2 = [(point_ls[1][0] + point_ls[2][0]) / 2, (point_ls[1][1] + point_ls[2][1]) / 2]
-        mid3 = [(point_ls[2][0] + point_ls[0][0]) / 2, (point_ls[2][1] + point_ls[0][1]) / 2]
-        print(vector1 , vector2, vector3)
-        
-        # 求外心
-        cir_point = circumcentre(mid1, mid2, nor_vector1, nor_vector2)
-        cir_point2int = [cir_point[0], cir_point[1]]
-        print("外心 : " , cir_point2int)
+        print("三點 : ",point_ls[0], point_ls[1], point_ls[2])
         
         # 三點平行共線(例外狀況 : 要先進行化簡)
+        vector1 = b-a
+        vector2 = c-b
         if(np.array_equal(vector1, vector2) or (vector1[0] / vector1[1] == vector2[0] / vector2[1])):
             point_line([point_ls[1], point_ls[0]])
             point_line([point_ls[2], point_ls[1]])
-            
-        # 外心跑出邊框外
-        elif(cir_point[0] < 0 or cir_point[1] < 0 or cir_point[1] > 600 or cir_point[0] > 600):
-            point_line([point_ls[0], point_ls[2]])
-            point_line([point_ls[1], point_ls[2]])
-            
-        # 例外 : 三點不共線
         else:
+            # 求內心
+            heart_point = heart(a, b, c)
+        
+            # 極座標找順序
+            h2pa = math.atan2(heart_point[1] - a[1], heart_point[0] - a[0])
+            h2pb = math.atan2(heart_point[1] - b[1], heart_point[0] - b[0])
+            h2pc = math.atan2(heart_point[1] - c[1], heart_point[0] - c[0])
+        
+            # 極座標排序
+            ordinate_in = [[h2pa, a], [h2pb, b], [h2pc, c]]
+            print(h2pa, h2pb, h2pc)
+            sorted_ordinate_in = sorted(ordinate_in)
+            print(sorted_ordinate_in)
+            #print(sorted_ordinate_in[0][1][0])
+        
+            # 求得兩點向量
+            vector1 = sorted_ordinate_in[1][1] - sorted_ordinate_in[0][1]
+            vector2 = sorted_ordinate_in[2][1] - sorted_ordinate_in[1][1]
+            vector3 = sorted_ordinate_in[0][1] - sorted_ordinate_in[2][1]
+        
+            # 求法向量
+            nor_vector1 = np.array([vector1[1], -vector1[0]])
+            nor_vector2 = np.array([vector2[1], -vector2[0]])
+            nor_vector3 = np.array([vector3[1], -vector3[0]])
+            print("法向量", nor_vector1, nor_vector2, nor_vector3)
+        
+            # 兩點中點
+            mid1 = [(sorted_ordinate_in[0][1][0] + sorted_ordinate_in[1][1][0]) / 2, (sorted_ordinate_in[0][1][1] + sorted_ordinate_in[1][1][1]) / 2]
+            mid2 = [(sorted_ordinate_in[1][1][0] + sorted_ordinate_in[2][1][0]) / 2, (sorted_ordinate_in[1][1][1] + sorted_ordinate_in[2][1][1]) / 2]
+            mid3 = [(sorted_ordinate_in[2][1][0] + sorted_ordinate_in[0][1][0]) / 2, (sorted_ordinate_in[2][1][1] + sorted_ordinate_in[0][1][1]) / 2]
+            # mid2 = [(point_ls[1][0] + point_ls[2][0]) / 2, (point_ls[1][1] + point_ls[2][1]) / 2]
+            # mid3 = [(point_ls[2][0] + point_ls[0][0]) / 2, (point_ls[2][1] + point_ls[0][1]) / 2]
+            print(vector1 , vector2, vector3)
+        
+            # 求外心
+            cir_point = circumcentre(mid1, mid2, nor_vector1, nor_vector2)
+            cir_point2int = [int(cir_point[0]), int(cir_point[1])]
+            print("外心 : " , cir_point2int)
+        
+        
+            
+            # 外心跑出邊框外
+            if(cir_point[0] < 0 or cir_point[1] < 0 or cir_point[1] > 600 or cir_point[0] > 600):
+                if(not np.array_equal(vector1, vector2)):
+                    point_line([sorted_ordinate_in[0][1], sorted_ordinate_in[1][1]])
+                    point_line([sorted_ordinate_in[1][1], sorted_ordinate_in[2][1]])
+                else:
+                    point_line([sorted_ordinate_in[1][1], sorted_ordinate_in[2][1]])
+                    point_line([sorted_ordinate_in[0][1], sorted_ordinate_in[2][1]])
+                    
+            # 例外 : 三點不共線
+            else:
             
             # point_list.append([round(cir_point[0],0), round(cir_point[1],0)]) 我只是拿來檢查外心的位置是否正確拉~
             
             # 判斷夾角
-            ang_va1 = vector1[0] * vector3[0] + vector1[1] * vector3[1]
-            ang_va2 = vector2[0] * vector3[0] + vector2[1] * vector3[1]
-            ang_va3 = vector2[0] * vector1[0] + vector2[1] * vector1[1]
-            print(ang_va1, ang_va2, ang_va3)
+#                 ang_va1 = vector1[0] * vector3[0] + vector1[1] * vector3[1]
+#                 ang_va2 = vector2[0] * vector3[0] + vector2[1] * vector3[1]
+#                 ang_va3 = vector2[0] * vector1[0] + vector2[1] * vector1[1]
+#                 print(ang_va1, ang_va2, ang_va3)
                 
-            # 起點 : 外心 朝著三方向
-            out_vector1 = np.array(mid1) - np.array(cir_point2int)
-            out_vector2 = np.array(mid2) - np.array(cir_point2int);
-            out_vector3 = np.array(mid3) - np.array(cir_point2int);
-            
-            if(ang_va3 == 0):
-                if(point_list[2][1] > point_list[1][1]):
-                    if(out_vector1[0] == 0 and out_vector1[1] == 0):
-                        out_vector1 = np.array([-nor_vector1[0], -nor_vector1[1]])
-                    elif(out_vector2[0] == 0 and out_vector2[1] == 0):
-                        out_vector2 = np.array([-nor_vector2[0], -nor_vector2[1]])
-                    elif(out_vector3[0] == 0 and out_vector3[1] == 0):
-                        out_vector3 = np.array([nor_vector3[0], nor_vector3[1]])
-                else:
-                    if(out_vector1[0] == 0 and out_vector1[1] == 0):
-                        out_vector1 = np.array([-nor_vector1[0], -nor_vector1[1]])
-                    elif(out_vector2[0] == 0 and out_vector2[1] == 0):
-                        out_vector2 = np.array([-nor_vector2[0], -nor_vector2[1]])
-                    elif(out_vector3[0] == 0 and out_vector3[1] == 0):
-                        out_vector3 = np.array([-nor_vector3[0], -nor_vector3[1]])
-            elif(ang_va1 == 0):
-                if(out_vector1[0] == 0 and out_vector1[1] == 0):
-                    out_vector1 = np.array([-nor_vector1[0], -nor_vector1[1]])
-                elif(out_vector2[0] == 0 and out_vector2[1] == 0):
-                    out_vector2 = np.array([-nor_vector2[0], -nor_vector2[1]])
-                elif(out_vector3[0] == 0 and out_vector3[1] == 0):
-                    out_vector3 = np.array([-nor_vector3[0], -nor_vector3[1]])
-            else:
-                if(out_vector1[0] == 0 and out_vector1[1] == 0):
-                    out_vector1 = np.array([nor_vector1[0], nor_vector1[1]])
-                elif(out_vector2[0] == 0 and out_vector2[1] == 0):
-                    out_vector2 = np.array([-nor_vector2[0], -nor_vector2[1]])
-                elif(out_vector3[0] == 0 and out_vector3[1] == 0):
-                    out_vector3 = np.array([-nor_vector3[0], -nor_vector3[1]])
+            # 向量方向 = 點向式 - 外心 
+                out_vector1 = np.array(mid1) + np.array(nor_vector1) - np.array(cir_point2int)
+                out_vector2 = np.array(mid2) + np.array(nor_vector2) - np.array(cir_point2int)
+                out_vector3 = np.array(mid3) + np.array(nor_vector3) - np.array(cir_point2int)
+                print("點向量:", out_vector1, out_vector2, out_vector3)
+                
+                #例外處理
+                # -- -- --
+                if(out_vector1[0]<0 and out_vector1[1]<0 and out_vector2[0]<0 and out_vector2[1]<0 and out_vector3[0]<0 and out_vector3[1]<0):
+                    out_vector3=-out_vector3
+                # +- +- +-
+                if(out_vector1[0]>0 and out_vector1[1]<0 and out_vector2[0]>0 and out_vector2[1]<0 and out_vector3[0]>0 and out_vector3[1]<0):
+                    out_vector1=-out_vector2
+                # ++ ++ ++
+                if(out_vector1[0]>0 and out_vector1[1]>0 and out_vector2[0]>0 and out_vector2[1]>0 and out_vector3[0]>0 and out_vector3[1]>0):
+                    out_vector2=-out_vector2
+                # -+ -+ -+
+                if(out_vector1[0]<0 and out_vector1[1]>0 and out_vector2[0]<0 and out_vector2[1]>0 and out_vector3[0]<0 and out_vector3[1]>0):
+                    out_vector3=-out_vector3
+                # ++ ++ +-
+                if(out_vector1[0]>0 and out_vector1[1]>0 and out_vector2[0]>0 and out_vector2[1]>0 and out_vector3[0]>0 and out_vector3[1]<0):
+                    out_vector2=-out_vector2
+                # -- -+ -+
+                if(out_vector1[0]<0 and out_vector1[1]>0 and out_vector2[0]<0 and out_vector2[1]<0 and out_vector3[0]<0 and out_vector3[1]>0):
+                    out_vector3=-out_vector3
+                # +- +- ++ 
+                if(out_vector1[0]>0 and out_vector1[1]<0 and out_vector2[0]>0 and out_vector2[1]<0 and out_vector3[0]>0 and out_vector3[1]>0):
+                    out_vector1=-out_vector1
+                    
+#             if(ang_va3 == 0):
+#                 if(point_list[2][1] > point_list[1][1]):
+#                     if(out_vector1[0] == 0 and out_vector1[1] == 0):
+#                         out_vector1 = np.array([-nor_vector1[0], -nor_vector1[1]])
+#                     elif(out_vector2[0] == 0 and out_vector2[1] == 0):
+#                         out_vector2 = np.array([-nor_vector2[0], -nor_vector2[1]])
+#                     elif(out_vector3[0] == 0 and out_vector3[1] == 0):
+#                         out_vector3 = np.array([nor_vector3[0], nor_vector3[1]])
+#                 else:
+#                     if(out_vector1[0] == 0 and out_vector1[1] == 0):
+#                         out_vector1 = np.array([-nor_vector1[0], -nor_vector1[1]])
+#                     elif(out_vector2[0] == 0 and out_vector2[1] == 0):
+#                         out_vector2 = np.array([-nor_vector2[0], -nor_vector2[1]])
+#                     elif(out_vector3[0] == 0 and out_vector3[1] == 0):
+#                         out_vector3 = np.array([-nor_vector3[0], -nor_vector3[1]])
+#             elif(ang_va1 == 0):
+#                 if(out_vector1[0] == 0 and out_vector1[1] == 0):
+#                     out_vector1 = np.array([-nor_vector1[0], -nor_vector1[1]])
+#                 elif(out_vector2[0] == 0 and out_vector2[1] == 0):
+#                     out_vector2 = np.array([-nor_vector2[0], -nor_vector2[1]])
+#                 elif(out_vector3[0] == 0 and out_vector3[1] == 0):
+#                     out_vector3 = np.array([-nor_vector3[0], -nor_vector3[1]])
+#             else:
+#                 if(out_vector1[0] == 0 and out_vector1[1] == 0):
+#                     out_vector1 = np.array([nor_vector1[0], nor_vector1[1]])
+#                 elif(out_vector2[0] == 0 and out_vector2[1] == 0):
+#                     out_vector2 = np.array([-nor_vector2[0], -nor_vector2[1]])
+#                 elif(out_vector3[0] == 0 and out_vector3[1] == 0):
+#                     out_vector3 = np.array([-nor_vector3[0], -nor_vector3[1]])
             
             
             
             # 找交點(初始化)
-            line1 = cir_point2int
-            line2 = cir_point2int
-            line3 = cir_point2int
+                line1 = cir_point2int
+                line2 = cir_point2int
+                line3 = cir_point2int
             
             # 三向量找與邊框的交點
-            # > 0 -> 鈍角
-            if(ang_va1 > 0 or ang_va2 > 0):
+           
                 while(line1[0] >= 0 and line1[1] >= 0 and line1[0] <= 600 and line1[1] <= 600):
-                    if(ang_va1 < 0):  # if -> 處理當角度為銳角的情形
-                        line1 = [line1[0] - out_vector1[0] / 100, line1[1] - out_vector1[1] / 100]
-                    elif(ang_va1 > 0):  # elif -> 處理當角度為鈍角的情形
-                        line1 = [line1[0] + out_vector1[0] / 100, line1[1] + out_vector1[1] / 100]
-                    else:
-                        line1 = [line1[0] + out_vector1[0] / 100, line1[1] + out_vector1[1] / 100]
+                    line1 = [line1[0] + out_vector1[0] / 500, line1[1] + out_vector1[1] / 500]
                 while(line2[0] >= 0 and line2[1] >= 0 and line2[0] <= 600 and line2[1] <= 600):
-                    if(ang_va2 < 0):
-                        line2 = [line2[0] - out_vector2[0] / 100, line2[1] - out_vector2[1] / 100]
-                    elif(ang_va2 > 0):
-                        line2 = [line2[0] + out_vector2[0] / 100, line2[1] + out_vector2[1] / 100]
-                    else:
-                        line2 = [line2[0] + out_vector2[0] / 100, line2[1] + out_vector2[1] / 100]
+                    line2 = [line2[0] + out_vector2[0] / 500, line2[1] + out_vector2[1] / 500]
                 while(line3[0] >= 0 and line3[1] >= 0 and line3[0] <= 600 and line3[1] <= 600):
-                    if(ang_va3 < 0):
-                        line3 = [line3[0] + out_vector3[0] / 100, line3[1] + out_vector3[1] / 100]
-                    elif(ang_va3 > 0):
-                        line3 = [line3[0] - out_vector3[0] / 100, line3[1] - out_vector3[1] / 100]
-                    else:
-                        line3 = [line3[0] + out_vector3[0] / 100, line3[1] + out_vector3[1] / 100]
-            else:
-                while(line1[0] >= 0 and line1[1] >= 0 and line1[0] <= 600 and line1[1] <= 600):
-                    if(ang_va1 < 0):  # if -> 處理當角度為銳角的情形
-                        line1 = [line1[0] + out_vector1[0] / 100, line1[1] + out_vector1[1] / 100]
-                    elif(ang_va1 > 0):  # elif -> 處理當角度為鈍角的情形
-                        line1 = [line1[0] - out_vector1[0] / 100, line1[1] - out_vector1[1] / 100]
-                    else:
-                        line1 = [line1[0] + out_vector1[0] / 100, line1[1] + out_vector1[1] / 100]
-                while(line2[0] >= 0 and line2[1] >= 0 and line2[0] <= 600 and line2[1] <= 600):
-                    if(ang_va2 < 0):
-                        line2 = [line2[0] + out_vector2[0] / 100, line2[1] + out_vector2[1] / 100]
-                    elif(ang_va2 > 0):
-                        line2 = [line2[0] - out_vector2[0] / 100, line2[1] - out_vector2[1] / 100]
-                    else:
-                        line2 = [line2[0] + out_vector2[0] / 100, line2[1] / 10 + out_vector2[1] / 100]
-                while(line3[0] >= 0 and line3[1] >= 0 and line3[0] <= 600 and line3[1] <= 600):
-                    if(ang_va3 < 0):
-                        line3 = [line3[0] + out_vector3[0] / 100, line3[1] + out_vector3[1] / 100]
-                    elif(ang_va3 > 0):
-                        line3 = [line3[0] - out_vector3[0] / 100, line3[1] - out_vector3[1] / 100]
-                    else:
-                        line3 = [line3[0] + out_vector3[0] / 100, line3[1] + out_vector3[1] / 100]
+                    line3 = [line3[0] + out_vector3[0] / 500, line3[1] + out_vector3[1] / 500]
             
             # 加入線的範圍, 將double 轉型 int 
-            print(line1, line2, line3)
-            line_list.append([[int(line1[0]), int(line1[1])], [int(cir_point2int[0]), int(cir_point2int[1])]])
-            line_list.append([[int(line2[0]), int(line2[1])], [int(cir_point2int[0]), int(cir_point2int[1])]])
-            line_list.append([[int(line3[0]), int(line3[1])], [int(cir_point2int[0]), int(cir_point2int[1])]])
-            print(point_list)
-            print(line_list)
+                print(line1, line2, line3)
+                line_list.append([[int(line1[0]), int(line1[1])], [int(cir_point2int[0]), int(cir_point2int[1])]])
+                line_list.append([[int(line2[0]), int(line2[1])], [int(cir_point2int[0]), int(cir_point2int[1])]])
+                line_list.append([[int(line3[0]), int(line3[1])], [int(cir_point2int[0]), int(cir_point2int[1])]])
+                print(point_list)
+                print(line_list)
             
 # 內積求外心
 def circumcentre(a1, b1, v1, v2):
@@ -465,9 +499,9 @@ def divide_and_conquer():
 # Start the Voronoi Diagram
 def run():
     global point_list
-#     point_list.append([200, 300])
-#     point_list.append([300, 200])
-#     point_list.append([300, 300])
+#     point_list.append([487, 155])
+#     point_list.append([498, 168])
+#     point_list.append([502, 181])
 
     # del the duplicate point in the beginning
     point_list = del_dup_point()

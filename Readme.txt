@@ -49,3 +49,6 @@ Python tk fileDialog 寫檔案
 中文的 windows「命令提示字元」(cmd) 編碼預設是：cp950 ，而 Python3 的預設程式碼編碼是：utf-8 (cp65001)
 >>>https://read01.com/Rg255.html
 >>>http://marsray.pixnet.net/blog/post/61040521-%5Bpython3%5D-%E7%94%A8-python3-%E5%AF%AB%E4%B8%80%E5%80%8B%E7%B6%B2%E8%B7%AF%E7%88%AC%E8%9F%B2
+
+程式 Bug 
+1.特定形式之三點(非常靠近)，有時線會畫錯
