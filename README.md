@@ -1,6 +1,6 @@
 # **Voronoi Diagram**
 **Author : 陳柏憲 BoXian Chen**
-
+**Goal : Voronoi Diagram within four points**
 ---
 **Package :**
 
