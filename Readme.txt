@@ -1,6 +1,6 @@
 #------------------------------------------
 # $LAN=Python$
-# Author : ³¯¬f¾Ë  Bo-Xian Chen
+# Author : é™³æŸæ†²  Bo-Xian Chen
 # Student ID : M053040020
 # Date : 2016/10/05
 #------------------------------------------
@@ -13,42 +13,45 @@ SimpleGUICS2Pygame
 What does the if __name__ == "__main__": do?
 >>> http://stackoverflow.com/questions/419163/what-does-if-name-main-do
 
-±Æ§Ç .sort() , sorted()
+æ’åº .sort() , sorted()
 >>> http://swaywang.blogspot.tw/2012/05/pythonpythonpython-sorting.html
 
-[µ{¦¡«ä¸ô]
-Æ[¹î¤§«á±oª¾
-§ä¥X¤@­Ó¤T¨¤§Î©Ò§Î¦¨ªº¥~¤ß¡A¨Ã¥H¥~¤ß¬°°ò·Ç¥h°µµe½uªº°Ê§@¡A
-³Ì¤jªº°İÃD¦b©ó : ­n¦p¦ó§ä¥X
-¥~¤ß©¼¦¹¬Û³s´N¥i¥H§Î¦¨¤@­ÓConvex hull , 
+[ç¨‹å¼æ€è·¯]
+è§€å¯Ÿä¹‹å¾Œå¾—çŸ¥
+æ‰¾å‡ºä¸€å€‹ä¸‰è§’å½¢æ‰€å½¢æˆçš„å¤–å¿ƒï¼Œä¸¦ä»¥å¤–å¿ƒç‚ºåŸºæº–å»åšç•«ç·šçš„å‹•ä½œï¼Œ
+æœ€å¤§çš„å•é¡Œåœ¨æ–¼ : è¦å¦‚ä½•æ‰¾å‡º
+å¤–å¿ƒå½¼æ­¤ç›¸é€£å°±å¯ä»¥å½¢æˆä¸€å€‹Convex hull , 
 
-[¼Æ¾Ç]
-¨D¤¤ÂI  (x, y) = ((x1 + x2)/2 , (y1 + y2)/2)
-¨â½u««ª½ ±×²v m1 * m2 = -1
-###¤£¨D±×²v¡A§ï¨D""¦V¶q""
+[æ•¸å­¸]
+æ±‚ä¸­é»  (x, y) = ((x1 + x2)/2 , (y1 + y2)/2)
+å…©ç·šå‚ç›´ æ–œç‡ m1 * m2 = -1
+###ä¸æ±‚æ–œç‡ï¼Œæ”¹æ±‚""å‘é‡""
 
-¦V¶q««ª½ (a !=0 and b !=0)
+å‘é‡å‚ç›´ (a !=0 and b !=0)
 a=(x1, y1)
 b=(x2, y2)
 a * b = 0  -> x1x2 + y1y2 =0
 reference >>> http://mail.smhs.kh.edu.tw/~tch044/formula/colum3.htm
 
-Python - ¦V¶q³B²z
+Python - å‘é‡è™•ç†
 >>>http://ccckmit.wikidot.com/la:vector
 
-ºtºâªkµ§°O - §Q¥Î¦V¶q¨D¥æÂI
+æ¼”ç®—æ³•ç­†è¨˜ - åˆ©ç”¨å‘é‡æ±‚äº¤é»
 >>>http://www.csie.ntnu.edu.tw/~u91029/Point.html
-ÃÒ©ú>>>http://paulbourke.net/geometry/pointlineplane/
+è­‰æ˜>>>http://paulbourke.net/geometry/pointlineplane/
 
 Voronoi Diagram
 >>>http://students.info.uaic.ro/~emilian.necula/vor2.pdf
 
-Python tk fileDialog ¼gÀÉ®×
+Python tk fileDialog å¯«æª”æ¡ˆ
 >>>http://stackoverflow.com/questions/19476232/save-file-dialog-in-tkinter
 
-¤¤¤åªº windows¡u©R¥O´£¥Ü¦r¤¸¡v(cmd) ½s½X¹w³]¬O¡Gcp950 ¡A¦Ó Python3 ªº¹w³]µ{¦¡½X½s½X¬O¡Gutf-8 (cp65001)
+ä¸­æ–‡çš„ windowsã€Œå‘½ä»¤æç¤ºå­—å…ƒã€(cmd) ç·¨ç¢¼é è¨­æ˜¯ï¼šcp950 ï¼Œè€Œ Python3 çš„é è¨­ç¨‹å¼ç¢¼ç·¨ç¢¼æ˜¯ï¼šutf-8 (cp65001)
 >>>https://read01.com/Rg255.html
 >>>http://marsray.pixnet.net/blog/post/61040521-%5Bpython3%5D-%E7%94%A8-python3-%E5%AF%AB%E4%B8%80%E5%80%8B%E7%B6%B2%E8%B7%AF%E7%88%AC%E8%9F%B2
 
-µ{¦¡ Bug 
-1.¯S©w§Î¦¡¤§¤TÂI(«D±`¾aªñ)¡A¦³®É½u·|µe¿ù
+ç¨‹å¼ Bug 
+1.ç‰¹å®šå½¢å¼ä¹‹ä¸‰é»(éå¸¸é è¿‘)ï¼Œæœ‰æ™‚ç·šæœƒç•«éŒ¯
+
+![image](
+https://github.com/abc234466/Voronoi-Diagram/blob/master/voronoi%20diagram.png)
