@@ -1,11 +1,7 @@
-#------------------------------------------
-# $LAN=Python$
-# Author : 陳柏憲  Bo-Xian Chen
-# Student ID : M053040020
-# Date : 2016/10/05
-#------------------------------------------
-
-#[            Voronoi Diagram             ]
+ $LAN=Python$
+ Author : 陳柏憲  Bo-Xian Chen
+ Student ID : M053040020
+ Date : 2016/10/05
 
 SimpleGUICS2Pygame
 >>> https://pypi.python.org/pypi/SimpleGUICS2Pygame
