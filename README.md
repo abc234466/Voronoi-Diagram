@@ -14,7 +14,7 @@
 3. 向量垂直 (a !=0 and b !=0) a=(x1, y1) b=(x2, y2) a * b = 0 -> x1x2 + y1y2 =0
     >http://mail.smhs.kh.edu.tw/~tch044/formula/colum3.htm
 4. 演算法筆記 - 利用向量求交點
-    >http://www.csie.ntnu.edu.tw/~u91029/Point.html
+    >http://www.csie.ntnu.edu.tw/~u91029/Point.html<br>
     >Prove : http://paulbourke.net/geometry/pointlineplane/
 7. Voronoi Diagram
     >http://students.info.uaic.ro/~emilian.necula/vor2.pdf
@@ -22,7 +22,7 @@
 ---
 **疑難雜症**
 1. 中文的 windows「命令提示字元」(cmd) 編碼預設是：cp950 ，而 Python3 的預設程式碼編碼是：utf-8 (cp65001)
-    >https://read01.com/Rg255.html#.W74ylmgzZPY
+    >https://read01.com/Rg255.html#.W74ylmgzZPY<br>
     >http://marsray.pixnet.net/blog/post/61040521-%5Bpython3%5D-%E7%94%A8-python3-%E5%AF%AB%E4%B8%80%E5%80%8B%E7%B6%B2%E8%B7%AF%E7%88%AC%E8%9F%B2
 
 ---
