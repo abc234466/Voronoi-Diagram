@@ -53,4 +53,4 @@ Python tk fileDialog 寫檔案
 程式 Bug 
 1.特定形式之三點(非常靠近)，有時線會畫錯
 
-![image](https://github.com/abc234466/Voronoi-Diagram/blob/master/voronoi%20diagram.png)
+![image](https://github.com/abc234466/Voronoi-Diagram/blob/master/voronoi%20diagram.gif)
