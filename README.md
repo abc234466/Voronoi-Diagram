@@ -1,6 +1,6 @@
 Voronoi Diagram
 === 
-*Author : 陳柏憲 BoXian Chen*
+*Author : 陳柏憲 BoXian Chen*<br>
 *Goal : Voronoi Diagram within four points*
 ---
 * Package 😗
@@ -20,7 +20,7 @@ Voronoi Diagram
 
 ## 疑難雜症
 1. 中文的 windows「命令提示字元」(cmd) 編碼預設是：cp950 ，而 Python3 的預設程式碼編碼是：utf-8 (cp65001)
-[Windows下CMD中文亂碼問題解決方法](https://read01.com/Rg255.html#.W74ylmgzZPY)
+[Windows下CMD中文亂碼問題解決方法](https://read01.com/Rg255.html#.W74ylmgzZPY)<br>
 [用 Python3 寫一個網路爬蟲](http://marsray.pixnet.net/blog/post/61040521-%5Bpython3%5D-%E7%94%A8-python3-%E5%AF%AB%E4%B8%80%E5%80%8B%E7%B6%B2%E8%B7%AF%E7%88%AC%E8%9F%B2)
 
 
